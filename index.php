@@ -65,7 +65,7 @@ if ($randomImage) {
     }
 } else {
     // 如果没有随机图片，则输出一个默认的图片
-    $defaultImage = 'path/to/default/image.jpg'; // 替换为你的默认图片路径
+    $defaultImage = 'images/image.jpg'; // 替换为你的默认图片路径
     $imageData = file_get_contents($defaultImage);
     $imageType = get_mime_type($defaultImage);
     header('Content-Type: ' . $imageType);
