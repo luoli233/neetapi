@@ -1,11 +1,11 @@
 <?php
 /**
- * 版权所有 (c) 2024 NEET姬
+ * 版权所有 (c) 2024 luoli233
  * 保留所有权利
  * 
  * 本代码受版权法保护，未经授权，禁止复制、分发或修改。
  * 
- * @作者: NEET姬
+ * @作者: luoli233
  * @创建日期: 2024-05-31
  * @版本: 1.0
  */
@@ -18,14 +18,8 @@ function get_mime_type($filename) {
     return $mime_type;
 }
 
-// 固定的图片域名
-$imageDomain = 'www.xxx.com'; // 替换为你的域名
-
 // 图片文件夹的相对路径
 $imageFolder = 'images'; // 图片文件夹和 PHP 文件在同一个目录下
-
-// 获取返回类型
-$returnType = isset($_GET['return']) ? $_GET['return'] : '';
 
 // 遍历图片文件夹，获取所有图片路径
 $imagePaths = array();
@@ -39,6 +33,9 @@ if (is_dir($imageFolder)) {
         }
     }
 }
+
+// 获取返回类型
+$returnType = isset($_GET['return']) ? $_GET['return'] : '';
 
 // 从数组中随机选择一张图片
 $randomImage = null;
@@ -56,14 +53,13 @@ if ($randomImage) {
         // 返回 JSON 格式
         $result = array(
             "code" => 200,
-            "imgurl" => 'http://' . $imageDomain . '/' . basename($randomImage),
+            "imgurl" => $randomImage,
             "mime_type" => $imageType
         );
         header('Content-Type: application/json');
         echo json_encode($result);
     } else {
         // 直接返回图片
-        header('Content-Disposition: inline; filename="' . basename($randomImage) . '"');
         header('Content-Type: ' . $imageType);
         echo $imageData;
     }
@@ -71,23 +67,9 @@ if ($randomImage) {
     // 如果没有随机图片，则输出一个默认的图片
     $defaultImage = 'path/to/default/image.jpg'; // 替换为你的默认图片路径
     $imageData = file_get_contents($defaultImage);
-    $imageType = mime_content_type($defaultImage); // 获取图片的 MIME 类型
-
-    if ($returnType === 'json') {
-        // 返回 JSON 格式
-        $result = array(
-            "code" => 404,
-            "imgurl" => 'http://' . $imageDomain . '/' . basename($defaultImage),
-            "mime_type" => $imageType
-        );
-        header('Content-Type: application/json');
-        echo json_encode($result);
-    } else {
-        // 直接返回图片
-        header('Content-Disposition: inline; filename="' . basename($defaultImage) . '"');
-        header('Content-Type: ' . $imageType);
-        echo $imageData;
-    }
+    $imageType = get_mime_type($defaultImage);
+    header('Content-Type: ' . $imageType);
+    echo $imageData;
 }
 
 ?>
